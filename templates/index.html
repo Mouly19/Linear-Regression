@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinearLearn — Python ML Edition</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="logo-group">
+      <div class="logo-badge">Lx</div>
+      <div>
+        <div class="logo-title">Linear Learn</div>
+        <div class="logo-sub">Interactive Linear Regression </div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span class="tech-chip">Python 3</span>
+      <span class="tech-chip">Flask</span>
+      <span class="tech-chip">scikit-learn</span>
+      <span class="tech-chip">Matplotlib</span>
+      <span class="tech-chip">Pandas</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════ STEPPER ══════════════════════════ -->
+<nav class="stepper">
+  <div class="stepper-inner" id="stepperNav">
+    <button class="step-btn active" data-step="1">1<span>Upload</span></button>
+    <div class="step-line"></div>
+    <button class="step-btn" data-step="2">2<span>Preview</span></button>
+    <div class="step-line"></div>
+    <button class="step-btn" data-step="3">3<span>Preprocess</span></button>
+    <div class="step-line"></div>
+    <button class="step-btn" data-step="4">4<span>EDA</span></button>
+    <div class="step-line"></div>
+    <button class="step-btn" data-step="5">5<span>Theory</span></button>
+    <div class="step-line"></div>
+    <button class="step-btn" data-step="6">6<span>Config</span></button>
+    <div class="step-line"></div>
+    <button class="step-btn" data-step="7">7<span>Train</span></button>
+    <div class="step-line"></div>
+    <button class="step-btn" data-step="8">8<span>Predict</span></button>
+    <div class="step-line"></div>
+    <button class="step-btn" data-step="9">9<span>Evaluate</span></button>
+  </div>
+</nav>
+
+<main class="main-content">
+
+<!-- ═══════════════════════════ STEP 1: UPLOAD ═══════════════════════════ -->
+<section class="step-panel active" id="step1">
+  <div class="panel-header">
+    <div class="panel-num">1</div>
+    <div>
+      <h2>Dataset Upload</h2>
+      <p class="panel-sub">Load your CSV data or try the sample housing dataset</p>
+    </div>
+  </div>
+  <div class="insight-box">
+    <span class="insight-icon">💡</span>
+    <div><strong>Why this step?</strong> Every ML pipeline begins with data. This module accepts CSV-formatted tabular data via a Flask <code>/api/upload</code> endpoint. The system will auto-detect column types, identify potential target variables, and prepare the dataset for preprocessing.</div>
+  </div>
+  <div class="upload-zone" id="uploadZone">
+    <div class="upload-icon">📁</div>
+    <p class="upload-title">Drag &amp; Drop your CSV file here</p>
+    <p class="upload-hint">or click to browse — supports comma-separated values (UTF-8)</p>
+    <input type="file" id="csvFileInput" accept=".csv" hidden />
+    <button class="btn-ghost" onclick="document.getElementById('csvFileInput').click()">Browse Files</button>
+  </div>
+  <div class="divider-or"><span>or</span></div>
+  <button class="btn-sample" id="loadSampleBtn">
+    🏠 Load Sample: Housing Dataset
+    <small>50 rows · 5 columns · area, bedrooms, age, location, price</small>
+  </button>
+  <div id="uploadStatus" class="status-msg hidden"></div>
+  <div class="step-actions">
+    <button class="btn-next" id="toStep2Btn" disabled>Next: Preview →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STEP 2: PREVIEW ══════════════════════════ -->
+<section class="step-panel" id="step2">
+  <div class="panel-header">
+    <div class="panel-num">2</div>
+    <div>
+      <h2>Data Preview</h2>
+      <p class="panel-sub">Shape, data types, and sample rows</p>
+    </div>
+  </div>
+  <div class="insight-box">
+    <span class="insight-icon">💡</span>
+    <div><strong>Why this step?</strong> The Flask backend uses <strong>df.dtypes</strong>, <strong>df.describe()</strong>, and <strong>df.isnull().sum()</strong> to produce a rich metadata response.</div>
+  </div>
+  <div id="previewContent">
+    <div class="placeholder-msg">👁️ Upload a dataset to see the preview</div>
+  </div>
+  <div class="step-actions">
+    <button class="btn-prev" onclick="goToStep(1)">← Back</button>
+    <button class="btn-next" id="toStep3Btn" disabled>Next: Preprocess →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STEP 3: PREPROCESS ═══════════════════════ -->
+<section class="step-panel" id="step3">
+  <div class="panel-header">
+    <div class="panel-num">3</div>
+    <div>
+      <h2>Preprocessing</h2>
+      <p class="panel-sub">Handle missing values, encoding, and feature scaling</p>
+    </div>
+  </div>
+  <div class="insight-box">
+    <span class="insight-icon">💡</span>
+    <div><strong>Why this step?</strong> Raw data is rarely model-ready. Preprocessing ensures: <p>(1) no NaN values disrupt computation,</p> <p> (2) categorical features are numerically encoded, </p> <p>(3) features are on comparable scales so no single feature dominates via its magnitude. Skipping this can severely degrade model performance.</p></div>
+  </div>
+  <div id="preprocessContent">
+    <div class="placeholder-msg">🔧 Load data first</div>
+  </div>
+  <button class="btn-action" id="runPreprocessBtn" disabled>⚙️ Run Preprocessing</button>
+  <div id="preprocessStatus" class="status-msg hidden"></div>
+  <div id="preprocessResult" class="hidden"></div>
+  <div class="step-actions">
+    <button class="btn-prev" onclick="goToStep(2)">← Back</button>
+    <button class="btn-next" id="toStep4Btn" disabled>Next: EDA →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STEP 4: EDA ══════════════════════════════ -->
+<section class="step-panel" id="step4">
+  <div class="panel-header">
+    <div class="panel-num">4</div>
+    <div>
+      <h2>Exploratory Data Analysis</h2>
+      <p class="panel-sub">Distributions, correlations, and feature-target relationships</p>
+    </div>
+  </div>
+  <div class="insight-box">
+    <span class="insight-icon">💡</span>
+    <div><strong>Why this step?</strong> 
+      <p>EDA reveals patterns, outliers, and relationships before modelling. Correlation analysis identifies the most predictive features. Scatter plots expose non-linear relationships that might challenge a linear model. This guides feature selection and informs expectations about model performance.</p>
+    </div>
+  </div>
+  <div id="edaContent">
+    <div class="placeholder-msg">📊 Load and preprocess data first</div>
+  </div>
+  <div class="eda-controls hidden" id="edaControls">
+    <label>Target column for scatter plots:
+      <select id="edaTargetSelect" class="select-input"></select>
+    </label>
+    <button class="btn-action" id="runEDABtn">📊 Generate EDA Plots</button>
+  </div>
+  <div id="edaPlots" class="plots-grid"></div>
+  <div class="step-actions">
+    <button class="btn-prev" onclick="goToStep(3)">← Back</button>
+    <button class="btn-next" id="toStep5Btn" disabled>Next: Theory →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STEP 5: THEORY ═══════════════════════════ -->
+<section class="step-panel" id="step5">
+  <div class="panel-header">
+    <div class="panel-num">5</div>
+    <div>
+      <h2>Linear Regression Theory</h2>
+      <p class="panel-sub">Hypothesis, cost function, gradient descent &amp; closed-form solution</p>
+    </div>
+  </div>
+  <div class="theory-tabs">
+    <button class="theory-tab active" data-tab="hypothesis">Hypothesis</button>
+    <button class="theory-tab" data-tab="cost">Cost Function</button>
+    <button class="theory-tab" data-tab="gd">Gradient Descent</button>
+    <button class="theory-tab" data-tab="normal">Normal Equation</button>
+    <button class="theory-tab" data-tab="sklearn">scikit-learn</button>
+  </div>
+
+  <div class="theory-pane active" id="tab-hypothesis">
+    <div class="theory-card"> 
+      <div class="info-panel green">
+        <h3>📖 Hypothesis Formulation</h3>
+        <p>Linear regression assumes the target variable <em>y</em> is a <strong>linear combination</strong> of input features plus Gaussian noise.</p>
+      </div>
+      <div class="math-block">
+        <div class="math-label">Simple Linear Regression</div>
+        ŷ = β₀ + β₁·x<br/>where β₀ = intercept, β₁ = slope
+      </div>
+      <div class="math-block">
+        <div class="math-label">Multiple Linear Regression (vectorized)</div>
+        ŷ = β₀ + β₁x₁ + β₂x₂ + … + βₙxₙ = βᵀx
+      </div>
+    </div>
+  </div>
+
+  <div class="theory-pane" id="tab-cost">
+    <div class="theory-card">
+      <div class="info-panel green"><h3>📖 Cost Function — What Are We Minimizing?</h3>
+        <p>The cost function J(β) measures how "wrong" our predictions are on average. We use <strong>Mean Squared Error (MSE)</strong>. Squaring penalises large errors more harshly and produces a smooth, differentiable surface convenient for optimisation.</p>
+      </div>
+      <div class="math-block">
+        J(β) = (1/2m) · Σᵢ ( ŷᵢ − yᵢ )²<br/>
+        where m = number of training samples
+      </div>
+      <p>The cost surface is a <strong>convex paraboloid</strong> — exactly one global minimum.</p>
+    </div>
+  </div>
+
+  <div class="theory-pane" id="tab-gd">
+    <div class="theory-card">
+      <h3>📖 Gradient Descent — Iterative Optimisation</h3>
+      <p>Gradient Descent iteratively adjusts parameters by moving in the direction of <strong>steepest descent</strong> on the cost surface. The learning rate α controls step size. Too large → overshoots; too small → slow convergence.</p>
+      
+      <div class="math-block">
+        <div class="math-label">Update Rule</div>
+        β₀ := β₀ − α · (1/m) · Σ(ŷᵢ − yᵢ)<br/>
+        β₁ := β₁ − α · (1/m) · Σ(ŷᵢ − yᵢ)·xᵢ
+      </div>
+      <div class="math-block">
+        <div class="math-label">Vectorized (Multiple LR)</div>
+        β := β − (α/m) · Xᵀ(Xβ − y)
+      </div>
+    </div>
+  </div>
+
+  <div class="theory-pane" id="tab-normal">
+    <div class="theory-card">
+      <h3>📖 Normal Equation — Closed-Form Solution</h3>
+       <p>For linear regression, we can solve for the optimal parameters <strong>analytically</strong> by setting the gradient to zero. This avoids iterative optimisation but requires matrix inversion (O(n³) — expensive for large feature sets).</p>
+      
+      <div class="math-block">
+        <div class="math-label">Optimal Parameters (Matrix Form)</div>
+        β = (XᵀX)⁻¹ · Xᵀ · y
+      </div>
+      <p>Exact solution in one step — O(n³) cost. Preferred for small feature sets.</p>
+      <div class="math-block">
+        <div class="math-label">Simple LR Closed Form</div>
+        β₁ = Σ(xᵢ−x̄)(yᵢ−ȳ) / Σ(xᵢ−x̄)²<br/>
+        β₀ = ȳ − β₁·x̄
+      </div>
+    </div>
+  </div>
+
+  <div class="theory-pane" id="tab-sklearn">
+    <div class="theory-card">
+      <h3>🐍 How scikit-learn Implements This</h3>
+      <p><strong>sklearn.linear_model.LinearRegression</strong> uses LAPACK's DGELS routine (optimised QR decomposition) — a numerically stable version of the Normal Equation. </p>
+      <div class="code-block">
+<pre><code>from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import StandardScaler
+import pandas as pd, numpy as np
+
+# 1. Load with pandas 
+df = pd.read_csv("data.csv")
+
+# 2. Scale features 
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_train)
+
+# 3. Fit model 
+model = LinearRegression()
+model.fit(X_scaled, y_train)
+
+# 4. Access parameters
+print(model.coef_)       # β₁ … βₙ
+print(model.intercept_)  # β₀
+
+# 5. Predict 
+y_pred = model.predict(scaler.transform(X_test))</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-actions">
+    <button class="btn-prev" onclick="goToStep(4)">← Back</button>
+    <button class="btn-next" onclick="goToStep(6)">Next: Config →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STEP 6: CONFIG ═══════════════════════════ -->
+<section class="step-panel" id="step6">
+  <div class="panel-header">
+    <div class="panel-num">6</div>
+    <div>
+      <h2>Training Configuration</h2>
+      <p class="panel-sub">Select features, target, split ratio, and training method</p>
+    </div>
+  </div>
+  <div class="insight-box">
+    <span class="insight-icon">💡</span>
+    <div><strong>Why this step?</strong> Uses <strong>sklearn.model_selection.train_test_split</strong> and <strong>cross_val_score</strong> </div>
+  </div>
+  <div id="configContent">
+    <div class="placeholder-msg">⚙️ Load and preprocess data first</div>
+  </div>
+  <div class="config-form hidden" id="configForm">
+    <div class="form-group">
+      <label>Target Column (y)</label>
+      <select id="targetColSelect" class="select-input"></select>
+    </div>
+    <div class="form-group">
+      <label>Feature Columns (X) <small>hold Ctrl/Cmd for multi-select</small></label>
+      <select id="featureColSelect" class="select-input" multiple size="6"></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Test Split: <span id="splitLabel">20%</span></label>
+        <input type="range" id="testSplitRange" min="10" max="40" value="20" class="range-input" />
+      </div>
+      <div class="form-group">
+        <label>CV Folds</label>
+        <select id="cvFoldsSelect" class="select-input">
+          <option value="3">3-Fold</option>
+          <option value="5" selected>5-Fold</option>
+          <option value="10">10-Fold</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Feature Scaling</label>
+        <select id="scaleSelect" class="select-input">
+          <option value="true" selected>StandardScaler (recommended)</option>
+          <option value="false">None</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="step-actions">
+    <button class="btn-prev" onclick="goToStep(5)">← Back</button>
+    <button class="btn-next" id="toStep7Btn" disabled>Next: Train →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STEP 7: TRAIN ════════════════════════════ -->
+<section class="step-panel" id="step7">
+  <div class="panel-header">
+    <div class="panel-num">7</div>
+    <div>
+      <h2>Model Training &amp; Visualization</h2>
+      <p class="panel-sub">Learn parameters and visualize the fitted regression</p>
+    </div>
+  </div>
+  <div class="insight-box">
+    <span class="insight-icon">💡</span>
+    <div><strong>Why this step?</strong> The Flask backend fits <strong>sklearn.LinearRegression</strong> and uses <strong>Matplotlib</strong> to generate 3–4 diagnostic plots (regression line, predicted vs actual, residuals, coefficients) saved as PNGs in <code>static/generated_plots/</code>.</div>
+  </div>
+  <button class="btn-action btn-train" id="runTrainBtn" disabled>🚀 Train Model</button>
+  <div id="trainStatus" class="status-msg hidden"></div>
+  <div id="trainResults" class="hidden">
+    <div class="metrics-grid" id="metricsGrid"></div>
+    <div class="coeff-section" id="coeffSection"></div>
+    <div class="cv-section" id="cvSection"></div>
+    <div class="plots-grid" id="trainPlots"></div>
+  </div>
+  <div class="step-actions">
+    <button class="btn-prev" onclick="goToStep(6)">← Back</button>
+    <button class="btn-next" id="toStep8Btn" disabled>Next: Predict →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STEP 8: PREDICT ══════════════════════════ -->
+<section class="step-panel" id="step8">
+  <div class="panel-header">
+    <div class="panel-num">8</div>
+    <div>
+      <h2>Prediction &amp; Inference</h2>
+      <p class="panel-sub">Enter new feature values and trace the prediction step-by-step</p>
+    </div>
+  </div>
+  <div class="insight-box">
+    <span class="insight-icon">💡</span>
+    <div><strong>Why this step?</strong> Calls <code>model.predict()</code> on the server and returns a detailed step-by-step breakdown of the dot product — making the computation transparent for learning </div>
+  </div>
+  <div id="predictContent">
+    <div class="placeholder-msg">🎯 Train the model first</div>
+  </div>
+  <div class="predict-form hidden" id="predictForm">
+    <div id="predictInputs" class="predict-inputs-grid"></div>
+    <button class="btn-action" id="runPredictBtn">🎯 Predict</button>
+    <div id="predictResult" class="hidden predict-result-box"></div>
+  </div>
+  <div class="step-actions">
+    <button class="btn-prev" onclick="goToStep(7)">← Back</button>
+    <button class="btn-next" id="toStep9Btn" disabled>Next: Evaluate →</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STEP 9: EVALUATE ═════════════════════════ -->
+<section class="step-panel" id="step9">
+  <div class="panel-header">
+    <div class="panel-num">9</div>
+    <div>
+      <h2>Evaluation Metrics</h2>
+      <p class="panel-sub">MSE, MAE, R², RMSE, Adj-R² and predicted vs actual analysis</p>
+    </div>
+  </div>
+  <div class="insight-box">
+    <span class="insight-icon">💡</span>
+    <div><strong>Why this step?</strong> Uses <strong>sklearn.metrics</strong> — <code>mean_squared_error</code>, <code>mean_absolute_error</code>, <code>r2_score</code> . A Matplotlib summary chart is also generated server-side.</div>
+  </div>
+  <button class="btn-action" id="runEvalBtn" disabled>📈 Generate Evaluation Report</button>
+  <div id="evalResults" class="hidden">
+    <div class="metrics-grid" id="evalMetricsGrid"></div>
+    <div class="plots-grid" id="evalPlots"></div>
+    <div class="comparison-table-wrap" id="comparisonTable"></div>
+  </div>
+  <div class="step-actions">
+    <button class="btn-prev" onclick="goToStep(8)">← Back</button>
+    <button class="btn-action btn-success" onclick="resetApp()">🔄 Start Over</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer class="app-footer">
+  <div>Built By Mouly Sikdar</div>
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<div id="toast" class="toast"></div>
+</body>
+</html>
