@@ -259,8 +259,7 @@ Evaluate  → sklearn.metrics + summary chart
 
 ## 📄 License
 
-Educational project. Original concept by **Mouly Sikdar**. Converted to Python/Flask ML stack.
-
+Educational project. made by **Mouly Sikdar**.
 ---
 
 ## 🤝 Portfolio Notes
