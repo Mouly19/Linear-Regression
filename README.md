@@ -1,6 +1,7 @@
 # 📊 LinearLearn — Python/Flask ML Edition
 
-> **A complete conversion of a JavaScript Linear Regression app into a production-grade Python Machine Learning web application using Flask, scikit-learn, Pandas, NumPy, and Matplotlib.**
+> **A Python Machine Learning web application using Flask, scikit-learn, Pandas, NumPy, and Matplotlib.
+> LinearLearn is an interactive, step-by-step educational web application that teaches Linear Regression through hands-on experimentation. **
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.0+-black?logo=flask)](https://flask.palletsprojects.com)
@@ -11,9 +12,8 @@
 
 ## 🔍 Project Overview
 
-**LinearLearn** is an interactive, step-by-step educational web application that teaches Linear Regression through hands-on experimentation. This version is a **complete rewrite** of the original JavaScript/Chart.js frontend application into a full-stack Python web application.
-
-The original project performed all regression computations in the browser using JavaScript. This version moves all ML logic to a **Flask backend** powered by industry-standard Python ML libraries — making it suitable for AI/ML internship portfolios and production deployment.
+**LinearLearn** is an interactive, step-by-step educational web application that teaches Linear Regression through hands-on experimentation. Built with Python and Flask on the backend, it provides a full machine learning pipeline — from raw data upload to model evaluation — all inside a clean, dark-themed browser interface.
+This project is designed for students, ML beginners, and developers who want to understand how Linear Regression works in practice, with real data and real metrics.
 
 ---
 
